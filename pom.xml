@@ -14,6 +14,7 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>Spring-Security-Eureka-Postgres-ELK</name>
     <description>Spring-Security-Eureka-Postgres-ELK</description>
+    <packaging>pom</packaging>
 
     <modules>
         <module>discovery-service</module>
@@ -21,7 +22,6 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>17</java.version>
     </properties>
 
     <dependencies>
