@@ -19,7 +19,7 @@ import java.util.List;
 public class PokemonDto {
 
     @NotBlank(message = "Pokemon name can`t be blank")
-    private String pokemomName;
+    private String pokemonName;
 
     @NotNull(message = "Pokemon hp can`t be null")
     @Min(value = 1, message = "Pokemon hp can`t be less than 1")
@@ -40,9 +40,7 @@ public class PokemonDto {
     @Positive(message = "Pokemon weight can`t be less than 0")
     private float pokemonWeight;
 
-    @ManyToMany(fetch = FetchType.EAGER)
     @NotNull(message = "Pokemon type can`t be null")
-    private List<TypeDto> type;
+    private List<TypeDto> pokemonType;
 
-    private Coach pokemonCoach;
 }

@@ -1,11 +1,14 @@
 package com.fapah.pokemonservice.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.List;
 
@@ -24,7 +27,10 @@ public class Coach {
     @Column(name = "coach_name", nullable = false, unique = true)
     private String coachName;
 
-    @Column(name = "coachs_pokemons")
-    @OneToMany(mappedBy = "pokemonCoach", cascade = CascadeType.REFRESH)
-    private List<Pokemon> coachPokemons;
+    @OneToMany(
+            mappedBy = "pokemonCoach",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<Pokemon> coachsPokemons;
 }

@@ -7,6 +7,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import java.util.List;
 
 @Data
 @Entity
@@ -25,4 +29,8 @@ public class Type {
 
     @Column(name = "type_color", nullable = false, unique = true)
     private String typeColor;
+
+    @ManyToMany(mappedBy = "pokemonType", cascade = CascadeType.ALL)
+    private List<Pokemon> typePokemoms;
+
 }

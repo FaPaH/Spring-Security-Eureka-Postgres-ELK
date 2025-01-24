@@ -20,5 +20,5 @@ public class CoachDto {
     @NotBlank(message = "Coach name can`t be blank")
     private String coachName;
 
-    private List<PokemonDto> coachPokemons;
+    private List<PokemonDto> coachsPokemons;
 }

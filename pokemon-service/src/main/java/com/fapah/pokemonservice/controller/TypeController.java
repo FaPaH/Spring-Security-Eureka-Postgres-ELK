@@ -21,7 +21,7 @@ public class TypeController {
     private final TypeService typeService;
 
     @GetMapping("/getAllType")
-    public ResponseEntity<List<Type>> getAllTypes(){
+    public ResponseEntity<List<TypeDto>> getAllTypes(){
         return ResponseEntity.ok().body(typeService.getAllTypes());
     }
 
@@ -31,8 +31,8 @@ public class TypeController {
     }
 
     @PostMapping("/addType")
-    public ResponseEntity<String> addType(@RequestBody @Valid Type type){
-        return ResponseEntity.ok().body(typeService.addType(type));
+    public ResponseEntity<String> addType(@RequestBody @Valid TypeDto typeDto){
+        return ResponseEntity.ok().body(typeService.addType(typeDto));
     }
 
     @PostMapping("/deleteType")

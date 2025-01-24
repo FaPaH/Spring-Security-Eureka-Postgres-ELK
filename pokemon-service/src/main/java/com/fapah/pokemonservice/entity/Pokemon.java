@@ -1,5 +1,6 @@
 package com.fapah.pokemonservice.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -11,6 +12,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -24,8 +26,8 @@ public class Pokemon {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "pokemom_name", nullable = false, unique = true)
-    private String pokemomName;
+    @Column(name = "pokemon_name", nullable = false, unique = true)
+    private String pokemonName;
 
     @Column(name = "pokemon_hp", nullable = false)
     private int pokemonHp;
@@ -42,13 +44,13 @@ public class Pokemon {
     @Column(name = "pokemon_weight", nullable = false)
     private float pokemonWeight;
 
-    @Column(name = "pokemon_type", nullable = false)
-    @ManyToMany(fetch = FetchType.EAGER)
-    private List<Type> type;
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinTable(name = "pokemon_type",
+            joinColumns = @JoinColumn(name = "pokemon_id"),
+            inverseJoinColumns = @JoinColumn(name = "type_id")
+    )
+    private List<Type> pokemonType;
 
-    @ManyToOne
-    @JoinColumn(name = "coach_id")
-    @OnDelete(action = OnDeleteAction.NO_ACTION)
-    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
     private Coach pokemonCoach;
 }

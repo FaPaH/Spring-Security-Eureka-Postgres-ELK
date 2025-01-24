@@ -18,7 +18,7 @@ public class PokemonController {
     private final PokemonService pokemonService;
 
     @GetMapping("/getAllPokemons")
-    public ResponseEntity<List<Pokemon>> getAllPokemons(){
+    public ResponseEntity<List<PokemonDto>> getAllPokemons(){
         return ResponseEntity.ok().body(pokemonService.getAllPokemons());
     }
 
@@ -33,8 +33,8 @@ public class PokemonController {
     }
 
     @PostMapping("/addPokemon")
-    public ResponseEntity<String> addPokemon(@RequestBody @Valid Pokemon pokemon){
-        return ResponseEntity.ok().body(pokemonService.addPokemon(pokemon));
+    public ResponseEntity<String> addPokemon(@RequestBody @Valid PokemonDto pokemonDto){
+        return ResponseEntity.ok().body(pokemonService.addPokemon(pokemonDto));
     }
 
     @PostMapping("/deletePokemon")

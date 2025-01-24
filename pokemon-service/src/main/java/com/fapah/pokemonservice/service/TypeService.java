@@ -9,13 +9,13 @@ import java.util.List;
 
 public interface TypeService {
 
-    List<Type> getAllTypes();
+    List<TypeDto> getAllTypes();
 
     TypeDto getTypeById(long typeId);
 
     TypeDto getTypeByName(String typeName);
 
-    String addType(Type type);
+    String addType(TypeDto typeDto);
 
     String deleteType(long typeId);
 }

@@ -18,7 +18,7 @@ public class CoachController {
     private final CoachService coachService;
 
     @GetMapping("/getAllCoaches")
-    public ResponseEntity<List<Coach>> getAllCoaches() {
+    public ResponseEntity<List<CoachDto>> getAllCoaches() {
         return ResponseEntity.ok().body(coachService.getAllCoaches());
     }
 
@@ -33,8 +33,8 @@ public class CoachController {
     }
 
     @PostMapping("/addCoach")
-    public ResponseEntity<String> addCoach(@RequestBody @Valid Coach coach) {
-        return ResponseEntity.ok().body(coachService.addCoach(coach));
+    public ResponseEntity<String> addCoach(@RequestBody @Valid CoachDto coachDto) {
+        return ResponseEntity.ok().body(coachService.addCoach(coachDto));
     }
 
     @PostMapping("/deleteCoach")

@@ -8,13 +8,13 @@ import java.util.List;
 
 public interface CoachService {
 
-    List<Coach> getAllCoaches();
+    List<CoachDto> getAllCoaches();
 
     CoachDto getCoachById(long coachId);
 
     CoachDto getCoachByName(String coachName);
 
-    String addCoach(Coach coach);
+    String addCoach(CoachDto coachDto);
 
     String deleteCoach(long coachId);
 
