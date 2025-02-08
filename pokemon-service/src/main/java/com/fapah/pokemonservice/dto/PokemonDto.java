@@ -3,12 +3,14 @@ package com.fapah.pokemonservice.dto;
 import com.fapah.pokemonservice.entity.Coach;
 import com.fapah.pokemonservice.entity.Type;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.modelmapper.internal.bytebuddy.implementation.bind.annotation.Default;
 
 import java.util.List;
 
@@ -42,5 +44,7 @@ public class PokemonDto {
 
     @NotNull(message = "Pokemon type can`t be null")
     private List<TypeDto> pokemonType;
+
+    private String pokemonCoachName;
 
 }

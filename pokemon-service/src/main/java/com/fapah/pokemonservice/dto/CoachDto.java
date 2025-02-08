@@ -1,6 +1,7 @@
 package com.fapah.pokemonservice.dto;
 
 import com.fapah.pokemonservice.entity.Pokemon;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;

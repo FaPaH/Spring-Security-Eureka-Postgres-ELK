@@ -2,6 +2,7 @@ package com.fapah.pokemonservice.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -52,5 +53,6 @@ public class Pokemon {
     private List<Type> pokemonType;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
     private Coach pokemonCoach;
 }

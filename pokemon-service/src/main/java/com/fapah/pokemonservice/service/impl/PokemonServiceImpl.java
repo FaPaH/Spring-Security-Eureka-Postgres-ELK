@@ -1,14 +1,18 @@
 package com.fapah.pokemonservice.service.impl;
 
+import com.fapah.pokemonservice.dto.CoachDto;
 import com.fapah.pokemonservice.dto.PokemonDto;
 import com.fapah.pokemonservice.dto.TypeDto;
+import com.fapah.pokemonservice.entity.Coach;
 import com.fapah.pokemonservice.entity.Pokemon;
 import com.fapah.pokemonservice.entity.Type;
+import com.fapah.pokemonservice.exception.*;
 import com.fapah.pokemonservice.repository.PokemonRepository;
 import com.fapah.pokemonservice.repository.TypeRepository;
 import com.fapah.pokemonservice.service.PokemonService;
 import com.fapah.pokemonservice.service.TypeService;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.MappingException;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -28,59 +32,130 @@ public class PokemonServiceImpl implements PokemonService {
 
     @Override
     public List<PokemonDto> getAllPokemons() {
-        List<Pokemon> content = pokemonRepository.findAll();
-        return content.stream().map(this::mapToDto).toList();
+        try {
+
+            List<Pokemon> pokemons = pokemonRepository.findAll();
+
+            if(pokemons.isEmpty()) {
+                return Collections.emptyList();
+            }
+
+        return pokemons.stream().map(this::mapToDto).toList();
+
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Value can`t be null");
+        } catch (RuntimeException e) {
+            throw new RuntimeException("Uncaught exception, please try later", e);
+        }
     }
 
     @Override
     public PokemonDto getPokemonById(long pokemonId) {
-        Pokemon pokemon = pokemonRepository.findById(pokemonId).orElseThrow(RuntimeException::new);
-        return mapToDto(pokemon);
+        try {
+
+            Pokemon pokemon = pokemonRepository.findById(pokemonId)
+                    .orElseThrow(
+                            () -> new PokemonNotFoundException("Pokemon not found")
+            );
+            return mapToDto(pokemon);
+
+        } catch (PokemonNotFoundException e) {
+            throw e;
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Value can`t be null");
+        } catch (RuntimeException e) {
+            throw new RuntimeException("Uncaught exception, please try later", e);
+        }
     }
 
     @Override
     public PokemonDto getPokemonByName(String pokemonName) {
-        Pokemon pokemon = pokemonRepository.findByPokemonName(pokemonName).orElseThrow(RuntimeException::new);
-        return mapToDto(pokemon);
+        try {
+
+            Pokemon pokemon = pokemonRepository.findByPokemonName(pokemonName).orElseThrow(
+                    () -> new PokemonNotFoundException("Pokemon not found")
+            );
+            return mapToDto(pokemon);
+
+        } catch (PokemonNotFoundException e) {
+            throw e;
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Value can`t be null");
+        } catch (RuntimeException e) {
+            throw new RuntimeException("Uncaught exception, please try later", e);
+        }
     }
 
     @Override
     public String addPokemon(PokemonDto pokemonDto) {
+        try {
 
-        pokemonRepository.saveAndFlush(mapToEntity(pokemonDto));
-        return "Pokemon added successfully";
+            if (pokemonRepository.findByPokemonName(pokemonDto.getPokemonName()).isPresent()) {
+                throw new PokemonAlreadyExistException("Pokemon already exist");
+            }
+
+            pokemonRepository.saveAndFlush(mapToEntity(pokemonDto));
+            return "Pokemon added successfully";
+
+        } catch (PokemonAlreadyExistException e) {
+            throw e;
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Value can`t be null");
+        } catch (RuntimeException e) {
+            throw new RuntimeException("Uncaught exception, please try later", e);
+        }
     }
 
     @Override
     public String deletePokemon(long pokemonId) {
-        pokemonRepository.deleteById(pokemonId);
-        return "Pokemon deleted successfully";
+        try {
+
+            pokemonRepository.deleteById(pokemonId);
+            return "Pokemon deleted successfully";
+
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Value can`t be null");
+        } catch (RuntimeException e) {
+            throw new RuntimeException("Uncaught exception, please try later", e);
+        }
     }
 
     @Override
     public boolean checkPokemonHaveCoach(String pokemonName) {
-        return pokemonRepository.checkPokemonCoach(pokemonName).isPresent();
+        return getPokemonByName(pokemonName).getPokemonCoachName() != null;
     }
 
     private Pokemon mapToEntity(PokemonDto pokemonDto) {
-        Pokemon pokemon = modelMapper.map(pokemonDto, Pokemon.class);
+        try {
+            Pokemon pokemon = modelMapper.map(pokemonDto, Pokemon.class);
 
-        List<Type> types = new ArrayList<>();
-        for (TypeDto typeDto : pokemonDto.getPokemonType()) {
-            types.add(typeRepository.findByTypeName(typeDto.getTypeName()).get());
+            List<Type> types = new ArrayList<>();
+            for (TypeDto typeDto : pokemonDto.getPokemonType()) {
+                types.add(typeRepository.findByTypeName(typeDto.getTypeName()).get());
+            }
+
+            pokemon.setPokemonType(types);
+
+            return pokemon;
+
+        } catch (MappingException e) {
+            throw new MapToException("Uncaught exception, please try later");
         }
-
-        pokemon.setPokemonType(types);
-
-        return pokemon;
     }
 
     private PokemonDto mapToDto(Pokemon pokemon) {
-        PokemonDto pokemonDto = modelMapper.map(pokemon, PokemonDto.class);
-        pokemonDto.setPokemonType(pokemon.getPokemonType()
-                .stream()
-                .map(p -> modelMapper.map(p, TypeDto.class))
-                .toList());
-        return pokemonDto;
+        try {
+            PokemonDto pokemonDto = modelMapper.map(pokemon, PokemonDto.class);
+            pokemonDto.setPokemonCoachName(pokemon.getPokemonCoach().getCoachName());
+            pokemonDto.setPokemonType(pokemon.getPokemonType()
+                    .stream()
+                    .map(p -> modelMapper.map(p, TypeDto.class))
+                    .toList());
+
+            return pokemonDto;
+
+        } catch (MappingException e) {
+            throw new MapToException("Uncaught exception, please try later");
+        }
     }
 }
