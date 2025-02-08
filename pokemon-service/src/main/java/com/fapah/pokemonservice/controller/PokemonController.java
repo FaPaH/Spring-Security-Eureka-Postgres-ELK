@@ -5,6 +5,7 @@ import com.fapah.pokemonservice.entity.Pokemon;
 import com.fapah.pokemonservice.service.PokemonService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,12 +14,14 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/pokemon")
 @RequiredArgsConstructor
+@Slf4j
 public class PokemonController {
 
     private final PokemonService pokemonService;
 
     @GetMapping("/getAllPokemons")
     public ResponseEntity<List<PokemonDto>> getAllPokemons(){
+        log.info("getAllPokemons");
         return ResponseEntity.ok().body(pokemonService.getAllPokemons());
     }
 
