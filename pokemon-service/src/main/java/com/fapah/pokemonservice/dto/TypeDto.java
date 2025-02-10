@@ -7,11 +7,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TypeDto {
+public class TypeDto implements Serializable {
 
     @NotBlank(message = "Type name can`t be blank")
     private String typeName;

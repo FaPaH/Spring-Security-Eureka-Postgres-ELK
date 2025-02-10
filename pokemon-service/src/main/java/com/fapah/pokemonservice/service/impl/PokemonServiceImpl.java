@@ -14,6 +14,9 @@ import com.fapah.pokemonservice.service.TypeService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.MappingException;
 import org.modelmapper.ModelMapper;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -50,6 +53,7 @@ public class PokemonServiceImpl implements PokemonService {
     }
 
     @Override
+    @Cacheable(value = "pokemon", key = "#pokemonId")
     public PokemonDto getPokemonById(long pokemonId) {
         try {
 
@@ -69,6 +73,7 @@ public class PokemonServiceImpl implements PokemonService {
     }
 
     @Override
+    @Cacheable(value = "pokemon", key = "#pokemonName")
     public PokemonDto getPokemonByName(String pokemonName) {
         try {
 
@@ -87,6 +92,7 @@ public class PokemonServiceImpl implements PokemonService {
     }
 
     @Override
+    @CachePut(value = "pokemon", key = "#pokemonDto.pokemonName")
     public String addPokemon(PokemonDto pokemonDto) {
         try {
 
@@ -107,6 +113,7 @@ public class PokemonServiceImpl implements PokemonService {
     }
 
     @Override
+    @CacheEvict(value = "pokemon", key = "#pokemonId")
     public String deletePokemon(long pokemonId) {
         try {
 
@@ -121,6 +128,7 @@ public class PokemonServiceImpl implements PokemonService {
     }
 
     @Override
+    @Cacheable(value = "pokemon", key = "#pokemonName")
     public boolean checkPokemonHaveCoach(String pokemonName) {
         return getPokemonByName(pokemonName).getPokemonCoachName() != null;
     }

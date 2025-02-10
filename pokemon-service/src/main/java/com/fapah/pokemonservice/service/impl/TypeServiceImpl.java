@@ -7,6 +7,9 @@ import com.fapah.pokemonservice.repository.TypeRepository;
 import com.fapah.pokemonservice.service.TypeService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
@@ -22,6 +25,7 @@ public class TypeServiceImpl implements TypeService {
     private final ModelMapper modelMapper;
 
     @Override
+    @Cacheable(value = "type")
     public List<TypeDto> getAllTypes() {
         try {
 
@@ -41,6 +45,7 @@ public class TypeServiceImpl implements TypeService {
     }
 
     @Override
+    @Cacheable(value = "type", key = "#typeId")
     public TypeDto getTypeById(long typeId) {
         try {
 
@@ -60,6 +65,7 @@ public class TypeServiceImpl implements TypeService {
     }
 
     @Override
+    @Cacheable(value = "type", key = "#typeName")
     public TypeDto getTypeByName(String typeName) {
         try {
 
@@ -79,6 +85,7 @@ public class TypeServiceImpl implements TypeService {
     }
 
     @Override
+    @CachePut(value = "type", key = "#typeDto.typeName")
     public String addType(TypeDto typeDto) {
         try {
 
@@ -99,6 +106,7 @@ public class TypeServiceImpl implements TypeService {
     }
 
     @Override
+    @CacheEvict(value = "type", key = "#typeId")
     public String deleteType(long typeId) {
         try {
 

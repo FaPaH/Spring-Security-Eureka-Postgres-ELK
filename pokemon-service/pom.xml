@@ -33,6 +33,7 @@
         <spring-validation.version>3.4.1</spring-validation.version>
         <modelmapper.version>3.0.0</modelmapper.version>
         <springdoc.version>2.8.1</springdoc.version>
+        <redis.version>3.4.2</redis.version>
     </properties>
     <dependencies>
         <dependency>
@@ -43,6 +44,19 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+            <version>${redis.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+            <version>${redis.version}</version>
+        </dependency>
+
 
         <dependency>
             <groupId>org.springdoc</groupId>

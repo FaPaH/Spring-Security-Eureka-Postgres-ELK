@@ -15,6 +15,9 @@ import com.fapah.pokemonservice.service.PokemonService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.MappingException;
 import org.modelmapper.ModelMapper;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
@@ -54,6 +57,7 @@ public class CoachServiceImpl implements CoachService {
     }
 
     @Override
+    @Cacheable(value = "coach", key = "#coachId")
     public CoachDto getCoachById(long coachId) {
         try {
 
@@ -71,6 +75,7 @@ public class CoachServiceImpl implements CoachService {
     }
 
     @Override
+    @Cacheable(value = "coach", key = "#coachName")
     public CoachDto getCoachByName(String coachName) {
         try {
 
@@ -90,6 +95,7 @@ public class CoachServiceImpl implements CoachService {
     }
 
     @Override
+    @CachePut(value = "coach", key = "#coachDto.coachName")
     public String addCoach(CoachDto coachDto) {
         try {
 
@@ -120,6 +126,7 @@ public class CoachServiceImpl implements CoachService {
     }
 
     @Override
+    @CacheEvict(value = "coach", key = "#coachId")
     public String deleteCoach(long coachId) {
         try {
 

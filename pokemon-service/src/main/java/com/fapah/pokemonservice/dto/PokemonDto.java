@@ -12,13 +12,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.modelmapper.internal.bytebuddy.implementation.bind.annotation.Default;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PokemonDto {
+public class PokemonDto implements Serializable {
 
     @NotBlank(message = "Pokemon name can`t be blank")
     private String pokemonName;
