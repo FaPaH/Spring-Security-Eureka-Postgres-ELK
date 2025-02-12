@@ -8,27 +8,24 @@
         <version>3.4.1</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
+
     <groupId>com.fapah</groupId>
     <artifactId>Spring-Security-Eureka-Postgres-ELK</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>Spring-Security-Eureka-Postgres-ELK</name>
     <description>Spring-Security-Eureka-Postgres-ELK</description>
-    <url/>
-    <licenses>
-        <license/>
-    </licenses>
-    <developers>
-        <developer/>
-    </developers>
-    <scm>
-        <connection/>
-        <developerConnection/>
-        <tag/>
-        <url/>
-    </scm>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>discovery-service</module>
+        <module>config-service</module>
+        <module>pokemon-service</module>
+    </modules>
+
     <properties>
-        <java.version>17</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
     <dependencies>
     </dependencies>
 </project>
