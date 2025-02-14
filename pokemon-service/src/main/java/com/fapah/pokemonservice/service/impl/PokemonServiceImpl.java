@@ -93,15 +93,14 @@ public class PokemonServiceImpl implements PokemonService {
 
     @Override
     @CachePut(value = "pokemon", key = "#pokemonDto.pokemonName")
-    public String addPokemon(PokemonDto pokemonDto) {
+    public PokemonDto addPokemon(PokemonDto pokemonDto) {
         try {
 
             if (pokemonRepository.findByPokemonName(pokemonDto.getPokemonName()).isPresent()) {
                 throw new PokemonAlreadyExistException("Pokemon already exist");
             }
 
-            pokemonRepository.saveAndFlush(mapToEntity(pokemonDto));
-            return "Pokemon added successfully";
+            return mapToDto(pokemonRepository.saveAndFlush(mapToEntity(pokemonDto)));
 
         } catch (PokemonAlreadyExistException e) {
             throw e;

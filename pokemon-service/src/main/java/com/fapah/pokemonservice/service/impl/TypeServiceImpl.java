@@ -86,15 +86,14 @@ public class TypeServiceImpl implements TypeService {
 
     @Override
     @CachePut(value = "type", key = "#typeDto.typeName")
-    public String addType(TypeDto typeDto) {
+    public TypeDto addType(TypeDto typeDto) {
         try {
 
             if (typeRepository.findByTypeName(typeDto.getTypeName()).isPresent()) {
                 throw new TypeAlreadyExistException("Type already exist");
             }
 
-            typeRepository.saveAndFlush(mapToEntity(typeDto));
-            return "Type added successfully";
+            return mapToDto(typeRepository.saveAndFlush(mapToEntity(typeDto)));
 
         } catch (TypeAlreadyExistException e) {
             throw e;

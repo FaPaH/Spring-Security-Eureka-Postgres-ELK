@@ -15,7 +15,7 @@ public interface TypeService {
 
     TypeDto getTypeByName(String typeName);
 
-    String addType(TypeDto typeDto);
+    TypeDto addType(TypeDto typeDto);
 
     String deleteType(long typeId);
 }

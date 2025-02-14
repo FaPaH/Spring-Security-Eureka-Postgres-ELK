@@ -32,7 +32,7 @@ public class TypeController {
 
     @PostMapping("/addType")
     public ResponseEntity<String> addType(@RequestBody @Valid TypeDto typeDto){
-        return ResponseEntity.ok().body(typeService.addType(typeDto));
+        return ResponseEntity.ok().body("Type saved: " + typeService.addType(typeDto).getTypeName());
     }
 
     @PostMapping("/deleteType")
