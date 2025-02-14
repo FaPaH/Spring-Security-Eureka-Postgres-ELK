@@ -17,7 +17,7 @@ public interface PokemonService {
 
     PokemonDto getPokemonByName(String pokemonName);
 
-    String addPokemon(PokemonDto pokemonDto);
+    PokemonDto addPokemon(PokemonDto pokemonDto);
 
     String deletePokemon(long pokemonId);
 

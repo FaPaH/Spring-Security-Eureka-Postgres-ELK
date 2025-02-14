@@ -37,7 +37,7 @@ public class PokemonController {
 
     @PostMapping("/addPokemon")
     public ResponseEntity<String> addPokemon(@RequestBody @Valid PokemonDto pokemonDto){
-        return ResponseEntity.ok().body(pokemonService.addPokemon(pokemonDto));
+        return ResponseEntity.ok().body("Pokemon saved: " + pokemonService.addPokemon(pokemonDto).getPokemonName());
     }
 
     @PostMapping("/deletePokemon")

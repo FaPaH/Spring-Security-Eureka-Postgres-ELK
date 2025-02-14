@@ -96,7 +96,7 @@ public class CoachServiceImpl implements CoachService {
 
     @Override
     @CachePut(value = "coach", key = "#coachDto.coachName")
-    public String addCoach(CoachDto coachDto) {
+    public CoachDto addCoach(CoachDto coachDto) {
         try {
 
             if(coachRepository.findByCoachName(coachDto.getCoachName()).isPresent()) {
@@ -113,8 +113,8 @@ public class CoachServiceImpl implements CoachService {
                     }
                 }
             }
-            coachRepository.saveAndFlush(coach);
-            return "Coach added successfully";
+
+            return mapToDto(coachRepository.saveAndFlush(coach));
 
         } catch (CoachAlreadyExistException | PokemonAlreadyHaveCoachException e) {
             throw e;

@@ -34,7 +34,7 @@ public class CoachController {
 
     @PostMapping("/addCoach")
     public ResponseEntity<String> addCoach(@RequestBody @Valid CoachDto coachDto) {
-        return ResponseEntity.ok().body(coachService.addCoach(coachDto));
+        return ResponseEntity.ok().body("Coach is created: " + coachService.addCoach(coachDto).getCoachName());
     }
 
     @PostMapping("/deleteCoach")

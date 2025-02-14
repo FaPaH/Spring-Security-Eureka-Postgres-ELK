@@ -14,7 +14,7 @@ public interface CoachService {
 
     CoachDto getCoachByName(String coachName);
 
-    String addCoach(CoachDto coachDto);
+    CoachDto addCoach(CoachDto coachDto);
 
     String deleteCoach(long coachId);
 
