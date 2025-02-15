@@ -6,6 +6,7 @@ import com.fapah.pokemonservice.service.PokemonService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,8 +37,9 @@ public class PokemonController {
     }
 
     @PostMapping("/addPokemon")
-    public ResponseEntity<String> addPokemon(@RequestBody @Valid PokemonDto pokemonDto){
-        return ResponseEntity.ok().body("Pokemon saved: " + pokemonService.addPokemon(pokemonDto).getPokemonName());
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<PokemonDto> addPokemon(@RequestBody @Valid PokemonDto pokemonDto){
+        return ResponseEntity.status(HttpStatus.CREATED).body(pokemonService.addPokemon(pokemonDto));
     }
 
     @PostMapping("/deletePokemon")

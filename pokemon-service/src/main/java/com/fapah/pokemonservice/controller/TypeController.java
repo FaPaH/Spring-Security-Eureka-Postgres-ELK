@@ -8,6 +8,7 @@ import com.fapah.pokemonservice.service.PokemonService;
 import com.fapah.pokemonservice.service.TypeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,8 +32,9 @@ public class TypeController {
     }
 
     @PostMapping("/addType")
-    public ResponseEntity<String> addType(@RequestBody @Valid TypeDto typeDto){
-        return ResponseEntity.ok().body("Type saved: " + typeService.addType(typeDto).getTypeName());
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<TypeDto> addType(@RequestBody @Valid TypeDto typeDto){
+        return ResponseEntity.status(HttpStatus.CREATED).body(typeService.addType(typeDto));
     }
 
     @PostMapping("/deleteType")

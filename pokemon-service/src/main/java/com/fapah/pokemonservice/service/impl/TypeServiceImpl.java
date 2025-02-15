@@ -5,6 +5,7 @@ import com.fapah.pokemonservice.entity.Type;
 import com.fapah.pokemonservice.exception.*;
 import com.fapah.pokemonservice.repository.TypeRepository;
 import com.fapah.pokemonservice.service.TypeService;
+import com.fapah.pokemonservice.service.mapper.TypeMapper;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.cache.annotation.CacheEvict;
@@ -22,7 +23,7 @@ public class TypeServiceImpl implements TypeService {
 
     private final TypeRepository typeRepository;
 
-    private final ModelMapper modelMapper;
+    private final TypeMapper typeMapper;
 
     @Override
     @Cacheable(value = "type")
@@ -35,7 +36,7 @@ public class TypeServiceImpl implements TypeService {
                 return Collections.emptyList();
             }
 
-            return types.stream().map(this::mapToDto).toList();
+            return types.stream().map(typeMapper::mapToDto).toList();
 
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Value can`t be null");
@@ -53,7 +54,7 @@ public class TypeServiceImpl implements TypeService {
                     .orElseThrow(
                             () -> new TypeNotFoundException("Type not found")
                     );
-            return mapToDto(type);
+            return typeMapper.mapToDto(type);
 
         } catch (TypeNotFoundException e) {
             throw e;
@@ -73,7 +74,7 @@ public class TypeServiceImpl implements TypeService {
                     .orElseThrow(
                             () -> new TypeNotFoundException("Type not found")
                     );
-            return mapToDto(type);
+            return typeMapper.mapToDto(type);
 
         } catch (TypeNotFoundException e) {
             throw e;
@@ -93,7 +94,7 @@ public class TypeServiceImpl implements TypeService {
                 throw new TypeAlreadyExistException("Type already exist");
             }
 
-            return mapToDto(typeRepository.saveAndFlush(mapToEntity(typeDto)));
+            return typeMapper.mapToDto(typeRepository.saveAndFlush(typeMapper.mapToEntity(typeDto)));
 
         } catch (TypeAlreadyExistException e) {
             throw e;
@@ -116,22 +117,6 @@ public class TypeServiceImpl implements TypeService {
             throw new IllegalArgumentException("Value can`t be null");
         } catch (RuntimeException e) {
             throw new RuntimeException("Uncaught exception, please try later", e);
-        }
-    }
-
-    private TypeDto mapToDto(Type type) {
-        try {
-            return modelMapper.map(type, TypeDto.class);
-        } catch (MapToException e) {
-            throw new MapToException("Uncaught exception, please try later");
-        }
-    }
-
-    private Type mapToEntity(TypeDto typeDto) {
-        try {
-            return modelMapper.map(typeDto, Type.class);
-        } catch (MapToException e) {
-            throw new MapToException("Uncaught exception, please try later");
         }
     }
 }

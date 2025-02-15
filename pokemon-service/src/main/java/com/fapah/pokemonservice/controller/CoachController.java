@@ -5,6 +5,7 @@ import com.fapah.pokemonservice.entity.Coach;
 import com.fapah.pokemonservice.service.CoachService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,8 +34,9 @@ public class CoachController {
     }
 
     @PostMapping("/addCoach")
-    public ResponseEntity<String> addCoach(@RequestBody @Valid CoachDto coachDto) {
-        return ResponseEntity.ok().body("Coach is created: " + coachService.addCoach(coachDto).getCoachName());
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<CoachDto> addCoach(@RequestBody @Valid CoachDto coachDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(coachService.addCoach(coachDto));
     }
 
     @PostMapping("/deleteCoach")
