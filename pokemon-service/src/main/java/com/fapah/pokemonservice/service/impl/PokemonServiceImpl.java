@@ -1,25 +1,17 @@
 package com.fapah.pokemonservice.service.impl;
 
-import com.fapah.pokemonservice.dto.CoachDto;
 import com.fapah.pokemonservice.dto.PokemonDto;
-import com.fapah.pokemonservice.dto.TypeDto;
-import com.fapah.pokemonservice.entity.Coach;
 import com.fapah.pokemonservice.entity.Pokemon;
-import com.fapah.pokemonservice.entity.Type;
 import com.fapah.pokemonservice.exception.*;
 import com.fapah.pokemonservice.repository.PokemonRepository;
-import com.fapah.pokemonservice.repository.TypeRepository;
 import com.fapah.pokemonservice.service.PokemonService;
-import com.fapah.pokemonservice.service.TypeService;
+import com.fapah.pokemonservice.service.mapper.PokemonMapper;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.MappingException;
-import org.modelmapper.ModelMapper;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -27,11 +19,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PokemonServiceImpl implements PokemonService {
 
-    private final ModelMapper modelMapper;
-
     private final PokemonRepository pokemonRepository;
 
-    private final TypeRepository typeRepository;
+    private final PokemonMapper pokemonMapper;
 
     @Override
     public List<PokemonDto> getAllPokemons() {
@@ -43,7 +33,7 @@ public class PokemonServiceImpl implements PokemonService {
                 return Collections.emptyList();
             }
 
-        return pokemons.stream().map(this::mapToDto).toList();
+        return pokemons.stream().map(pokemonMapper::mapToDto).toList();
 
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Value can`t be null");
@@ -61,7 +51,7 @@ public class PokemonServiceImpl implements PokemonService {
                     .orElseThrow(
                             () -> new PokemonNotFoundException("Pokemon not found")
             );
-            return mapToDto(pokemon);
+            return pokemonMapper.mapToDto(pokemon);
 
         } catch (PokemonNotFoundException e) {
             throw e;
@@ -80,7 +70,7 @@ public class PokemonServiceImpl implements PokemonService {
             Pokemon pokemon = pokemonRepository.findByPokemonName(pokemonName).orElseThrow(
                     () -> new PokemonNotFoundException("Pokemon not found")
             );
-            return mapToDto(pokemon);
+            return pokemonMapper.mapToDto(pokemon);
 
         } catch (PokemonNotFoundException e) {
             throw e;
@@ -100,7 +90,7 @@ public class PokemonServiceImpl implements PokemonService {
                 throw new PokemonAlreadyExistException("Pokemon already exist");
             }
 
-            return mapToDto(pokemonRepository.saveAndFlush(mapToEntity(pokemonDto)));
+            return pokemonMapper.mapToDto(pokemonRepository.saveAndFlush(pokemonMapper.mapToEntity(pokemonDto)));
 
         } catch (PokemonAlreadyExistException e) {
             throw e;
@@ -130,39 +120,5 @@ public class PokemonServiceImpl implements PokemonService {
     @Cacheable(value = "pokemon", key = "#pokemonName")
     public boolean checkPokemonHaveCoach(String pokemonName) {
         return getPokemonByName(pokemonName).getPokemonCoachName() != null;
-    }
-
-    private Pokemon mapToEntity(PokemonDto pokemonDto) {
-        try {
-            Pokemon pokemon = modelMapper.map(pokemonDto, Pokemon.class);
-
-            List<Type> types = new ArrayList<>();
-            for (TypeDto typeDto : pokemonDto.getPokemonType()) {
-                types.add(typeRepository.findByTypeName(typeDto.getTypeName()).get());
-            }
-
-            pokemon.setPokemonType(types);
-
-            return pokemon;
-
-        } catch (MappingException e) {
-            throw new MapToException("Uncaught exception, please try later");
-        }
-    }
-
-    private PokemonDto mapToDto(Pokemon pokemon) {
-        try {
-            PokemonDto pokemonDto = modelMapper.map(pokemon, PokemonDto.class);
-            pokemonDto.setPokemonCoachName(pokemon.getPokemonCoach().getCoachName());
-            pokemonDto.setPokemonType(pokemon.getPokemonType()
-                    .stream()
-                    .map(p -> modelMapper.map(p, TypeDto.class))
-                    .toList());
-
-            return pokemonDto;
-
-        } catch (MappingException e) {
-            throw new MapToException("Uncaught exception, please try later");
-        }
     }
 }

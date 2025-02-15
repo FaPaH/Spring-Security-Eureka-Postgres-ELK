@@ -3,12 +3,15 @@ package com.fapah.pokemonservice.repository;
 import com.fapah.pokemonservice.entity.Pokemon;
 import com.fapah.pokemonservice.entity.Type;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,12 +22,21 @@ public class TypeRepositoryTest {
     @Autowired
     private TypeRepository typeRepository;
 
-    @Test
-    public void testAddType_whenValidType_shouldReturnExpectedType() {
-        Type type = Type.builder()
+    @Autowired
+    private PokemonRepository pokemonRepository;
+
+    private Type type;
+
+    @BeforeEach
+    void setup() {
+        type = Type.builder()
                 .typeName("Electric")
                 .typeColor("#fff")
                 .build();
+    }
+
+    @Test
+    public void testAddType_whenValidType_shouldReturnExpectedType() {
 
         Type savedType = typeRepository.save(type);
 
@@ -55,10 +67,6 @@ public class TypeRepositoryTest {
 
     @Test
     public void testGetTypeById_whenValidId_shouldReturnExpectedType() {
-        Type type = Type.builder()
-                .typeName("Electric")
-                .typeColor("#fff")
-                .build();
 
         typeRepository.save(type);
 
@@ -70,10 +78,6 @@ public class TypeRepositoryTest {
 
     @Test
     public void testGetTypeById_whenValidName_shouldReturnExpectedType() {
-        Type type = Type.builder()
-                .typeName("Electric")
-                .typeColor("#fff")
-                .build();
 
         typeRepository.save(type);
 
@@ -85,12 +89,6 @@ public class TypeRepositoryTest {
 
     @Test
     public void testUpdatePokemon_whenValidPokemon_shouldReturnExpectedPokemon() {
-
-        Type type = Type.builder()
-                .typeName("Electric")
-                .typeColor("#fff")
-                .build();
-
 
         typeRepository.save(type);
 
@@ -105,11 +103,6 @@ public class TypeRepositoryTest {
 
     @Test
     public void testDeleteType_whenValidType_shouldReturnNull() {
-
-        Type type = Type.builder()
-                .typeName("Electric")
-                .typeColor("#fff")
-                .build();
 
         typeRepository.save(type);
 

@@ -3,6 +3,7 @@ package com.fapah.pokemonservice.repository;
 import com.fapah.pokemonservice.entity.Pokemon;
 import com.fapah.pokemonservice.entity.Type;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
@@ -21,18 +22,19 @@ public class PokemonRepositoryTest {
     @Autowired
     private PokemonRepository pokemonRepository;
 
-    @Test
-    public void testAddPokemon_whenValidPokemon_shouldReturnExpectedPokemon() {
+    private Pokemon pokemon;
 
-        //Arrange
-        List<Type> pokemonType = List.of(Type.builder()
+    @BeforeEach
+
+    void setup(){
+        Type pokemonType = Type.builder()
                 .typeName("Electric")
                 .typeColor("#fff")
-                .build());
+                .build();
 
-        Pokemon pokemon = Pokemon.builder()
+        pokemon = Pokemon.builder()
                 .pokemonName("Pikachu")
-                .pokemonType(pokemonType)
+                .pokemonType(new ArrayList<>(Arrays.asList(pokemonType)))
                 .pokemonCoach(null)
                 .pokemonHp(100)
                 .pokemonAttack(100)
@@ -40,6 +42,10 @@ public class PokemonRepositoryTest {
                 .pokemonHeight(100)
                 .pokemonWeight(100)
                 .build();
+    }
+
+    @Test
+    public void testAddPokemon_whenValidPokemon_shouldReturnExpectedPokemon() {
 
         //Act
         Pokemon savedPokemon = pokemonRepository.save(pokemon);
@@ -53,25 +59,9 @@ public class PokemonRepositoryTest {
     @Test
     public void testGetAllPokemons_whenDatabaseHavePokemons_shouldReturnAllPokemons() {
 
-        List<Type> pokemonType = List.of(Type.builder()
-                .typeName("Electric")
-                .typeColor("#fff")
-                .build());
-
-        Pokemon pokemon1 = Pokemon.builder()
-                .pokemonName("Pikachu")
-                .pokemonType(pokemonType)
-                .pokemonCoach(null)
-                .pokemonHp(100)
-                .pokemonAttack(100)
-                .pokemonDefence(100)
-                .pokemonHeight(100)
-                .pokemonWeight(100)
-                .build();
-
         Pokemon pokemon2 = Pokemon.builder()
                 .pokemonName("Aboba")
-                .pokemonType(pokemonType)
+                .pokemonType(pokemon.getPokemonType())
                 .pokemonCoach(null)
                 .pokemonHp(100)
                 .pokemonAttack(100)
@@ -80,7 +70,7 @@ public class PokemonRepositoryTest {
                 .pokemonWeight(100)
                 .build();
 
-        pokemonRepository.save(pokemon1);
+        pokemonRepository.save(pokemon);
         pokemonRepository.save(pokemon2);
 
         List<Pokemon> pokemons = pokemonRepository.findAll();
@@ -91,23 +81,6 @@ public class PokemonRepositoryTest {
 
     @Test
     public void testGetPokemonById_whenValidPokemonId_shouldReturnExpectedPokemon() {
-
-        List<Type> pokemonType = List.of(Type.builder()
-                .typeName("Electric")
-                .typeColor("#fff")
-                .build());
-
-        Pokemon pokemon = Pokemon.builder()
-                .pokemonName("Pikachu")
-                .pokemonType(pokemonType)
-                .pokemonCoach(null)
-                .pokemonHp(100)
-                .pokemonAttack(100)
-                .pokemonDefence(100)
-                .pokemonHeight(100)
-                .pokemonWeight(100)
-                .build();
-
 
         pokemonRepository.save(pokemon);
 
@@ -120,23 +93,6 @@ public class PokemonRepositoryTest {
     @Test
     public void testGetPokemonByName_whenValidPokemonName_shouldReturnExpectedPokemon() {
 
-        List<Type> pokemonType = List.of(Type.builder()
-                .typeName("Electric")
-                .typeColor("#fff")
-                .build());
-
-        Pokemon pokemon = Pokemon.builder()
-                .pokemonName("Pikachu")
-                .pokemonType(pokemonType)
-                .pokemonCoach(null)
-                .pokemonHp(100)
-                .pokemonAttack(100)
-                .pokemonDefence(100)
-                .pokemonHeight(100)
-                .pokemonWeight(100)
-                .build();
-
-
         pokemonRepository.save(pokemon);
 
         Pokemon pokemonTest = pokemonRepository.findByPokemonName(pokemon.getPokemonName()).get();
@@ -147,23 +103,6 @@ public class PokemonRepositoryTest {
 
     @Test
     public void testUpdatePokemon_whenValidPokemon_shouldReturnExpectedPokemon() {
-
-        Type pokemonType = Type.builder()
-                .typeName("Electric")
-                .typeColor("#fff")
-                .build();
-
-        Pokemon pokemon = Pokemon.builder()
-                .pokemonName("Pikachu")
-                .pokemonType(new ArrayList<>(Arrays.asList(pokemonType)))
-                .pokemonCoach(null)
-                .pokemonHp(100)
-                .pokemonAttack(100)
-                .pokemonDefence(100)
-                .pokemonHeight(100)
-                .pokemonWeight(100)
-                .build();
-
 
         pokemonRepository.save(pokemon);
 
@@ -178,23 +117,6 @@ public class PokemonRepositoryTest {
 
     @Test
     public void testDeletePokemon_whenValidPokemon_shouldReturnNull() {
-
-        Type pokemonType = Type.builder()
-                .typeName("Electric")
-                .typeColor("#fff")
-                .build();
-
-        Pokemon pokemon = Pokemon.builder()
-                .pokemonName("Pikachu")
-                .pokemonType(new ArrayList<>(Arrays.asList(pokemonType)))
-                .pokemonCoach(null)
-                .pokemonHp(100)
-                .pokemonAttack(100)
-                .pokemonDefence(100)
-                .pokemonHeight(100)
-                .pokemonWeight(100)
-                .build();
-
 
         pokemonRepository.save(pokemon);
 

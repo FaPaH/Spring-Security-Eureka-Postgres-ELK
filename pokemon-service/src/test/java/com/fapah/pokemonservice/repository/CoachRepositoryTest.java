@@ -4,6 +4,7 @@ import com.fapah.pokemonservice.entity.Coach;
 import com.fapah.pokemonservice.entity.Pokemon;
 import com.fapah.pokemonservice.entity.Type;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
@@ -24,6 +25,16 @@ public class CoachRepositoryTest {
 
     @Autowired
     private PokemonRepository pokemonRepository;
+
+    private Coach coach;
+
+    @BeforeEach
+    void setup() {
+        coach = Coach.builder()
+                .coachName("Aboba")
+                .coachsPokemons(null)
+                .build();
+    }
 
     @Test
     public void testGetAllCoachs_whenDatabaseHaveCoachs_shouldReturnAllCoachs() {
@@ -49,10 +60,6 @@ public class CoachRepositoryTest {
 
     @Test
     public void testGetCoachById_whenValidCoachId_shouldReturnCoach() {
-        Coach coach = Coach.builder()
-                .coachName("Aboba")
-                .coachsPokemons(null)
-                .build();
 
         coachRepository.save(coach);
 
@@ -64,10 +71,6 @@ public class CoachRepositoryTest {
 
     @Test
     public void testGetCoachByName_whenValidCoachName_shouldReturnCoach() {
-        Coach coach = Coach.builder()
-                .coachName("Aboba")
-                .coachsPokemons(null)
-                .build();
 
         coachRepository.save(coach);
 
@@ -79,10 +82,6 @@ public class CoachRepositoryTest {
 
     @Test
     public void testAddCoach_whenValidCoach_shouldReturnCoach() {
-        Coach coach = Coach.builder()
-                .coachName("Aboba")
-                .coachsPokemons(null)
-                .build();
 
         Coach savedCoach = coachRepository.save(coach);
 
@@ -92,11 +91,6 @@ public class CoachRepositoryTest {
 
     @Test
     public void testUpdateCoach_whenValidCoach_shouldReturnCoach() {
-
-        Coach coach = Coach.builder()
-                .coachName("Aboba")
-                .coachsPokemons(null)
-                .build();
 
         Type pokemonType = Type.builder()
                 .typeName("Electric")
@@ -127,11 +121,6 @@ public class CoachRepositoryTest {
 
     @Test
     public void testDeleteCoach_whenValidCoachId_shouldReturnNull() {
-
-        Coach coach = Coach.builder()
-                .coachName("Aboba")
-                .coachsPokemons(null)
-                .build();
 
         Coach savedCoach = coachRepository.save(coach);
 

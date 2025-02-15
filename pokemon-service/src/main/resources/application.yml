@@ -10,4 +10,4 @@ spring:
   profiles:
     active: dev, postgres, redis
   config:
-    import: 'configserver:'
+    import: 'optional:configserver:'
