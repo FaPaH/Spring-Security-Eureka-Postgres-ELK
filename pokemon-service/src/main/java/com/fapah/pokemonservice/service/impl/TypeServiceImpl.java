@@ -107,11 +107,10 @@ public class TypeServiceImpl implements TypeService {
 
     @Override
     @CacheEvict(value = "type", key = "#typeId")
-    public String deleteType(long typeId) {
+    public void deleteType(long typeId) {
         try {
 
             typeRepository.deleteById(typeId);
-            return "Type deleted successfully";
 
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Value can`t be null");

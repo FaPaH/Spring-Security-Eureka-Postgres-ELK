@@ -42,9 +42,10 @@ public class PokemonController {
         return ResponseEntity.status(HttpStatus.CREATED).body(pokemonService.addPokemon(pokemonDto));
     }
 
-    @PostMapping("/deletePokemon")
+    @DeleteMapping("/deletePokemon")
     public ResponseEntity<String> deletePokemon(@RequestParam(name = "pokemonId") long pokemonId){
-        return ResponseEntity.ok().body(pokemonService.deletePokemon(pokemonId));
+        pokemonService.deletePokemon(pokemonId);
+        return ResponseEntity.ok().body("Pokemon deleted successfully");
     }
 }
 

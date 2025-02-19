@@ -19,7 +19,7 @@ public interface PokemonService {
 
     PokemonDto addPokemon(PokemonDto pokemonDto);
 
-    String deletePokemon(long pokemonId);
+    void deletePokemon(long pokemonId);
 
     boolean checkPokemonHaveCoach(String pokemonName);
 }

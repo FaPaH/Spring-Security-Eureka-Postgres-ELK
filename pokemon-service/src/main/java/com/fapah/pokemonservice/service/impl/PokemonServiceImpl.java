@@ -103,11 +103,10 @@ public class PokemonServiceImpl implements PokemonService {
 
     @Override
     @CacheEvict(value = "pokemon", key = "#pokemonId")
-    public String deletePokemon(long pokemonId) {
+    public void deletePokemon(long pokemonId) {
         try {
 
             pokemonRepository.deleteById(pokemonId);
-            return "Pokemon deleted successfully";
 
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Value can`t be null");

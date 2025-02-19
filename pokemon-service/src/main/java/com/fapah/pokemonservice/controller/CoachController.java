@@ -39,8 +39,9 @@ public class CoachController {
         return ResponseEntity.status(HttpStatus.CREATED).body(coachService.addCoach(coachDto));
     }
 
-    @PostMapping("/deleteCoach")
+    @DeleteMapping("/deleteCoach")
     public ResponseEntity<String> deleteCoach(@RequestParam(name = "coachId") Long coachId) {
-        return ResponseEntity.ok().body(coachService.deleteCoach(coachId));
+        coachService.deleteCoach(coachId);
+        return ResponseEntity.ok().body("Coach deleted successfully");
     }
 }

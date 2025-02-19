@@ -31,14 +31,20 @@ public class TypeController {
         return ResponseEntity.ok().body(typeService.getTypeById(typeId));
     }
 
+    @GetMapping("/getTypeByName")
+    public ResponseEntity<TypeDto> getTypeByName(@RequestParam(name = "typeName") String typeName){
+        return ResponseEntity.ok().body(typeService.getTypeByName(typeName));
+    }
+
     @PostMapping("/addType")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<TypeDto> addType(@RequestBody @Valid TypeDto typeDto){
         return ResponseEntity.status(HttpStatus.CREATED).body(typeService.addType(typeDto));
     }
 
-    @PostMapping("/deleteType")
+    @DeleteMapping("/deleteType")
     public ResponseEntity<String> deleteType(@RequestParam(name = "typeId") long typeId){
-        return ResponseEntity.ok().body(typeService.deleteType(typeId));
+        typeService.deleteType(typeId);
+        return ResponseEntity.ok().body("Type deleted successfully");
     }
 }

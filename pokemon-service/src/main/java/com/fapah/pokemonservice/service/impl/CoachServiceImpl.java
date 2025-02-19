@@ -116,11 +116,10 @@ public class CoachServiceImpl implements CoachService {
 
     @Override
     @CacheEvict(value = "coach", key = "#coachId")
-    public String deleteCoach(long coachId) {
+    public void deleteCoach(long coachId) {
         try {
 
             coachRepository.deleteById(coachId);
-            return "Coach deleted successfully";
 
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Value can`t be null");
