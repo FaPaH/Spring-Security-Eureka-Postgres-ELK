@@ -7,6 +7,7 @@ import com.fapah.pokemonservice.repository.PokemonRepository;
 import com.fapah.pokemonservice.service.PokemonService;
 import com.fapah.pokemonservice.service.mapper.PokemonMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -17,6 +18,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PokemonServiceImpl implements PokemonService {
 
     private final PokemonRepository pokemonRepository;
@@ -30,10 +32,12 @@ public class PokemonServiceImpl implements PokemonService {
             List<Pokemon> pokemons = pokemonRepository.findAll();
 
             if(pokemons.isEmpty()) {
+                log.info("No pokemons found");
                 return Collections.emptyList();
             }
 
-        return pokemons.stream().map(pokemonMapper::mapToDto).toList();
+            log.info("Found {} pokemons", pokemons.size());
+            return pokemons.stream().map(pokemonMapper::mapToDto).toList();
 
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Value can`t be null");
@@ -51,6 +55,8 @@ public class PokemonServiceImpl implements PokemonService {
                     .orElseThrow(
                             () -> new PokemonNotFoundException("Pokemon not found")
             );
+
+            log.info("Found pokemon {} by ID: {}", pokemon, pokemonId);
             return pokemonMapper.mapToDto(pokemon);
 
         } catch (PokemonNotFoundException e) {
@@ -70,6 +76,8 @@ public class PokemonServiceImpl implements PokemonService {
             Pokemon pokemon = pokemonRepository.findByPokemonName(pokemonName).orElseThrow(
                     () -> new PokemonNotFoundException("Pokemon not found")
             );
+
+            log.info("Found pokemon {} by Name: {}", pokemon, pokemonName);
             return pokemonMapper.mapToDto(pokemon);
 
         } catch (PokemonNotFoundException e) {
@@ -90,6 +98,7 @@ public class PokemonServiceImpl implements PokemonService {
                 throw new PokemonAlreadyExistException("Pokemon already exist");
             }
 
+            log.info("Saving pokemon {}", pokemonDto);
             return pokemonMapper.mapToDto(pokemonRepository.saveAndFlush(pokemonMapper.mapToEntity(pokemonDto)));
 
         } catch (PokemonAlreadyExistException e) {
@@ -106,6 +115,7 @@ public class PokemonServiceImpl implements PokemonService {
     public void deletePokemon(long pokemonId) {
         try {
 
+            log.info("Deleting pokemon {}", pokemonId);
             pokemonRepository.deleteById(pokemonId);
 
         } catch (IllegalArgumentException e) {
@@ -118,6 +128,8 @@ public class PokemonServiceImpl implements PokemonService {
     @Override
     @Cacheable(value = "pokemon", key = "#pokemonName")
     public boolean checkPokemonHaveCoach(String pokemonName) {
-        return getPokemonByName(pokemonName).getPokemonCoachName() != null;
+        boolean isPokemonHaveCoach = getPokemonByName(pokemonName).getPokemonCoachName() != null;
+        log.info("Pokemon {} have coach: {}", pokemonName, isPokemonHaveCoach);
+        return isPokemonHaveCoach;
     }
 }

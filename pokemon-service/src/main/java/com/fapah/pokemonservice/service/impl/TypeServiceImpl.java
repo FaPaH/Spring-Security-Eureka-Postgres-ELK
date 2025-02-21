@@ -7,6 +7,7 @@ import com.fapah.pokemonservice.repository.TypeRepository;
 import com.fapah.pokemonservice.service.TypeService;
 import com.fapah.pokemonservice.service.mapper.TypeMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -19,6 +20,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class TypeServiceImpl implements TypeService {
 
     private final TypeRepository typeRepository;
@@ -33,9 +35,11 @@ public class TypeServiceImpl implements TypeService {
             List<Type> types = typeRepository.findAll();
 
             if (types.isEmpty()) {
+                log.info("No types found");
                 return Collections.emptyList();
             }
 
+            log.info("Found {} types", types.size());
             return types.stream().map(typeMapper::mapToDto).toList();
 
         } catch (IllegalArgumentException e) {
@@ -54,6 +58,8 @@ public class TypeServiceImpl implements TypeService {
                     .orElseThrow(
                             () -> new TypeNotFoundException("Type not found")
                     );
+
+            log.info("Found type {} with id {}",type, typeId);
             return typeMapper.mapToDto(type);
 
         } catch (TypeNotFoundException e) {
@@ -74,6 +80,8 @@ public class TypeServiceImpl implements TypeService {
                     .orElseThrow(
                             () -> new TypeNotFoundException("Type not found")
                     );
+
+            log.info("Found type {} with name {}",type ,typeName);
             return typeMapper.mapToDto(type);
 
         } catch (TypeNotFoundException e) {
@@ -94,6 +102,7 @@ public class TypeServiceImpl implements TypeService {
                 throw new TypeAlreadyExistException("Type already exist");
             }
 
+            log.info("Adding type {}", typeDto);
             return typeMapper.mapToDto(typeRepository.saveAndFlush(typeMapper.mapToEntity(typeDto)));
 
         } catch (TypeAlreadyExistException e) {
@@ -110,6 +119,7 @@ public class TypeServiceImpl implements TypeService {
     public void deleteType(long typeId) {
         try {
 
+            log.info("Deleting type {}", typeId);
             typeRepository.deleteById(typeId);
 
         } catch (IllegalArgumentException e) {

@@ -1,5 +1,6 @@
 package com.fapah.pokemonservice.exception;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,10 +13,12 @@ import java.sql.SQLException;
 import java.time.Instant;
 
 @RestControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = PokemonNotFoundException.class)
     public @ResponseBody ResponseEntity<ErrorResponse> handlePokemonNotFoundException(PokemonNotFoundException ex) {
+        log.error(ex.getMessage());
         return new ResponseEntity<>(
                 errorResponseBuilder(HttpStatus.NOT_FOUND, ex.getMessage()),
                 HttpStatus.NOT_FOUND
@@ -24,6 +27,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = TypeNotFoundException.class)
     public @ResponseBody ResponseEntity<ErrorResponse> handleTypeNotFoundException(TypeNotFoundException ex) {
+        log.error(ex.getMessage());
         return new ResponseEntity<>(
                 errorResponseBuilder(HttpStatus.NOT_FOUND, ex.getMessage()),
                 HttpStatus.NOT_FOUND
@@ -32,6 +36,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = CoachNotFoundException.class)
     public @ResponseBody ResponseEntity<ErrorResponse> handleCoachNotFoundException(CoachNotFoundException ex) {
+        log.error(ex.getMessage());
         return new ResponseEntity<>(
                 errorResponseBuilder(HttpStatus.NOT_FOUND, ex.getMessage()),
                 HttpStatus.NOT_FOUND
@@ -40,6 +45,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = PokemonAlreadyHaveCoachException.class)
     public @ResponseBody ResponseEntity<ErrorResponse> handlePokemonAlreadyHaveCoachException(PokemonAlreadyHaveCoachException ex) {
+        log.error(ex.getMessage());
         return new ResponseEntity<>(
                 errorResponseBuilder(HttpStatus.CONFLICT, ex.getMessage()),
                 HttpStatus.CONFLICT
@@ -48,6 +54,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException ex) {
+        log.error(ex.getMessage());
         return new ResponseEntity<>(
                 errorResponseBuilder(HttpStatus.NOT_ACCEPTABLE, ex.getMessage()),
                 HttpStatus.NOT_ACCEPTABLE
@@ -56,6 +63,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MapToException.class)
     ResponseEntity<ErrorResponse> handleMapToException(MapToException ex) {
+        log.error(ex.getMessage());
         return new ResponseEntity<>(
                 errorResponseBuilder(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage()),
                 HttpStatus.UNPROCESSABLE_ENTITY
@@ -64,6 +72,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(TypeAlreadyExistException.class)
     ResponseEntity<ErrorResponse> handleTypeAlreadyExistException(TypeAlreadyExistException ex) {
+        log.error(ex.getMessage());
         return new ResponseEntity<>(
                 errorResponseBuilder(HttpStatus.CONFLICT, ex.getMessage()),
                 HttpStatus.CONFLICT
@@ -72,6 +81,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(CoachAlreadyExistException.class)
     ResponseEntity<ErrorResponse> handleCoachAlreadyExistException(CoachAlreadyExistException ex) {
+        log.error(ex.getMessage());
         return new ResponseEntity<>(
                 errorResponseBuilder(HttpStatus.CONFLICT, ex.getMessage()),
                 HttpStatus.CONFLICT
@@ -80,6 +90,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(PokemonAlreadyExistException.class)
     ResponseEntity<ErrorResponse> handlePokemonAlreadyExistException(PokemonAlreadyExistException ex) {
+        log.error(ex.getMessage());
         return new ResponseEntity<>(
                 errorResponseBuilder(HttpStatus.CONFLICT, ex.getMessage()),
                 HttpStatus.CONFLICT
@@ -89,8 +100,8 @@ public class GlobalExceptionHandler {
 
 
     @ExceptionHandler(RuntimeException.class)
-    ResponseEntity<ErrorResponse> handleUncaughtException(WebRequest request, RuntimeException ex)
-    {
+    ResponseEntity<ErrorResponse> handleUncaughtException(WebRequest request, RuntimeException ex) {
+        log.error(ex.getMessage());
         return new ResponseEntity<>(
                 errorResponseBuilder(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage()),
                 HttpStatus.INTERNAL_SERVER_ERROR
@@ -98,6 +109,7 @@ public class GlobalExceptionHandler {
     }
 
     private ErrorResponse errorResponseBuilder(HttpStatus status, String message) {
+        log.info("Creating error response with status {} and message {}", status.value(), message);
         return ErrorResponse.builder()
                 .statusCode(status.value())
                 .timestamp(Instant.now())

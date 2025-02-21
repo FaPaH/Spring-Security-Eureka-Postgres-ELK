@@ -10,6 +10,7 @@ import com.fapah.pokemonservice.repository.CoachRepository;
 import com.fapah.pokemonservice.service.CoachService;
 import com.fapah.pokemonservice.service.mapper.CoachMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -20,6 +21,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CoachServiceImpl implements CoachService {
 
     private final CoachRepository coachRepository;
@@ -33,9 +35,11 @@ public class CoachServiceImpl implements CoachService {
             List<Coach> coaches = coachRepository.findAll();
 
             if(coaches.isEmpty()) {
+                log.info("No coaches found");
                 return Collections.emptyList();
             }
 
+            log.info("Found {} coaches", coaches.size());
             return coaches.stream().map(coachMapper::mapToDto).toList();
 
         } catch (IllegalArgumentException e) {
@@ -54,6 +58,8 @@ public class CoachServiceImpl implements CoachService {
                     .orElseThrow(
                             () -> new CoachNotFoundException("Coach not found")
                     );
+
+            log.info("Found coach {} by ID: {}", coach, coachId);
             return coachMapper.mapToDto(coach);
 
         } catch (IllegalArgumentException e) {
@@ -72,6 +78,8 @@ public class CoachServiceImpl implements CoachService {
                     .orElseThrow(
                             () -> new CoachNotFoundException("Coach not found")
                     );
+
+            log.info("Found coach {} by Name: {}", coach, coachName);
             return coachMapper.mapToDto(coach);
 
         } catch (CoachNotFoundException e) {
@@ -103,6 +111,7 @@ public class CoachServiceImpl implements CoachService {
                 }
             }
 
+            log.info("Saving coach {}", coachDto);
             return coachMapper.mapToDto(coachRepository.saveAndFlush(coach));
 
         } catch (CoachAlreadyExistException | PokemonAlreadyHaveCoachException e) {
@@ -119,6 +128,7 @@ public class CoachServiceImpl implements CoachService {
     public void deleteCoach(long coachId) {
         try {
 
+            log.info("Deleting coach {}", coachId);
             coachRepository.deleteById(coachId);
 
         } catch (IllegalArgumentException e) {
